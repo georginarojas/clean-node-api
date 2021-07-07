@@ -1,7 +1,12 @@
-import { HttpResponse, HttpRequest, Controller, EmailValidator } from '../protocols'
-import { MissingParamError, InvalidParamError } from '../errors'
-import { badRequest, serverError } from '../helpers/http_helper'
-import { AddAccount } from '../../domain/usecases/add-account'
+import {
+  HttpResponse,
+  HttpRequest,
+  Controller,
+  EmailValidator,
+  AddAccount
+} from './signup-protocols'
+import { MissingParamError, InvalidParamError } from '../../errors'
+import { badRequest, serverError } from '../../helpers/http_helper'
 
 export class SignUpController implements Controller {
   private readonly emailValidator: EmailValidator
@@ -13,14 +18,19 @@ export class SignUpController implements Controller {
 
   handle (httpRequest: HttpRequest): HttpResponse {
     try {
-    // if (!httpRequest.body.name) {
-    //   return badRequest(new MissingParamError('name'))
-    // }
-    // if (!httpRequest.body.email) {
-    //   return badRequest(new MissingParamError('email'))
-    // }
+      // if (!httpRequest.body.name) {
+      //   return badRequest(new MissingParamError('name'))
+      // }
+      // if (!httpRequest.body.email) {
+      //   return badRequest(new MissingParamError('email'))
+      // }
 
-      const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
+      const requiredFields = [
+        'name',
+        'email',
+        'password',
+        'passwordConfirmation'
+      ]
 
       for (const field of requiredFields) {
         if (!httpRequest.body[field]) {

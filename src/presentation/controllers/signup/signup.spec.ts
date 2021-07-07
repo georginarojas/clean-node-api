@@ -1,8 +1,15 @@
 import { SignUpController } from './signup'
-import { MissingParamError, InvalidParamError, ServerError } from '../errors'
-import { EmailValidator } from '../protocols'
-import { AddAccount, AddAccountModel } from '../../domain/usecases/add-account'
-import { AccountModel } from '../../domain/models/account'
+import {
+  MissingParamError,
+  InvalidParamError,
+  ServerError
+} from '../../errors'
+import {
+  EmailValidator,
+  AddAccount,
+  AddAccountModel,
+  AccountModel
+} from './signup-protocols'
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
@@ -32,7 +39,6 @@ interface SutTypes {
   sut: SignUpController
   emailValidatorStub: EmailValidator
   addAccountStub: AddAccount
-
 }
 
 // Factory method pattern
@@ -101,7 +107,9 @@ describe('SignUp Controller', () => {
     }
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('passwordConfirmation'))
+    expect(httpResponse.body).toEqual(
+      new MissingParamError('passwordConfirmation')
+    )
   })
 
   test('Should return 400 if password confirmation fails', () => {
@@ -116,7 +124,9 @@ describe('SignUp Controller', () => {
     }
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
+    expect(httpResponse.body).toEqual(
+      new InvalidParamError('passwordConfirmation')
+    )
   })
 
   test('Should return 400 if an invalid email is provided', () => {
@@ -184,7 +194,6 @@ describe('SignUp Controller', () => {
       name: 'any_name',
       email: 'any_email@mail.com',
       password: 'any_password'
-
     })
   })
 })
