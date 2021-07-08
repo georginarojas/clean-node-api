@@ -4,8 +4,13 @@
  */
 
 export default {
-
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  collectCoverageFrom: [
+    '<rootDir>/src/**/*.ts',
+    '!<rootDir>/src/main/**',
+    '!<rootDir>/src/**/*-protocols.ts',
+    '!**/protocols/**',
+    '!**/test/**'
+  ],
 
   coverageDirectory: 'coverage',
 
@@ -19,5 +24,4 @@ export default {
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   collectCoverage: true,
   clearMocks: true
-
 }
