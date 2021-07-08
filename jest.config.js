@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 
-export default {
+module.exports = {
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/main/**',
@@ -19,9 +19,9 @@ export default {
   roots: ['<rootDir>/src'],
   transform: {
     '^.+\\.ts?$': 'ts-jest'
-  },
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.ts?$',
-  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
-  collectCoverage: true,
-  clearMocks: true
+  }
+  // testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.ts?$',
+  // moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+  // collectCoverage: true,
+  // clearMocks: true
 }
