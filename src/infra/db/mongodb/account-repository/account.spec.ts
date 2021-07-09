@@ -1,0 +1,30 @@
+import { MongoHelper } from '../helpers/mongo-helper'
+import { AccountMongoRepository } from './account'
+import * as dotenv from 'dotenv'
+dotenv.config()
+
+describe('Account Mongo Repository', () => {
+  // Connect and disconnect the mongodb
+  beforeAll(async () => {
+    const uri = process.env.MONGO_URL as string
+    await MongoHelper.connect(uri)
+  })
+
+  afterAll(async () => {
+    await MongoHelper.disconnect()
+  })
+  // -----------------------------------
+  test('Should return an account on success', async () => {
+    const sut = new AccountMongoRepository()
+    const account = await sut.add({
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    })
+    expect(account).toBeTruthy() // Not null
+    expect(account.id).toBeTruthy()
+    expect(account.name).toBe('any_name')
+    expect(account.email).toBe('any_email@mail.com')
+    expect(account.password).toBe('any_password')
+  })
+})
