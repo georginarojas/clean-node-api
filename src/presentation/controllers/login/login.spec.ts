@@ -1,6 +1,10 @@
 import { Authentication } from '../../../domain/usecases/authentication'
-import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
-import { badRequest, serverError } from '../../helpers/http_helper'
+import {
+  InvalidParamError,
+  MissingParamError,
+  ServerError
+} from '../../errors'
+import { badRequest, serverError, unauthorized } from '../../helpers/http_helper'
 import { EmailValidator, HttpRequest } from '../signup/signup-protocols'
 import { LoginController } from './login'
 
@@ -16,7 +20,7 @@ const makeEmailValidator = (): EmailValidator => {
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth (email: string, password: string): Promise<string> {
-      return await new Promise(resolve => resolve('any_token'))
+      return await new Promise((resolve) => resolve('any_token'))
     }
   }
   return new AuthenticationStub()
@@ -104,5 +108,14 @@ describe('Login Controller', () => {
     const authSpy = jest.spyOn(authenticationStub, 'auth')
     await sut.handle(makeFakeRequest())
     expect(authSpy).toHaveBeenCalledWith('any@mail.com', 'any_password')
+  })
+
+  test('Should returns 401 if invalid credential are provided', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest
+      .spyOn(authenticationStub, 'auth')
+      .mockReturnValueOnce(new Promise((resolve) => resolve(null as unknown as string)))
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(unauthorized())
   })
 })
