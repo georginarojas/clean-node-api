@@ -3,7 +3,11 @@ import {
   MissingParamError,
   ServerError
 } from '../../errors'
-import { badRequest, serverError, unauthorized } from '../../helpers/http_helper'
+import {
+  badRequest,
+  serverError,
+  unauthorized
+} from '../../helpers/http_helper'
 import { EmailValidator, HttpRequest, Authentication } from './login-protocols'
 import { LoginController } from './login'
 
@@ -102,6 +106,20 @@ describe('Login Controller', () => {
     expect(httpResponse).toEqual(serverError(new ServerError()))
   })
 
+  test('Should returns 500 if Authentication throws', async () => {
+    const { sut, authenticationStub } = makeSut()
+    // jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(() => {
+    //   throw new Error()
+    // })
+    jest
+      .spyOn(authenticationStub, 'auth')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      )
+    const httpResponse = await sut.handle(makeFakeRequest())
+    expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
+
   test('Should calls Authentication with correct email', async () => {
     const { sut, authenticationStub } = makeSut()
     const authSpy = jest.spyOn(authenticationStub, 'auth')
@@ -113,7 +131,9 @@ describe('Login Controller', () => {
     const { sut, authenticationStub } = makeSut()
     jest
       .spyOn(authenticationStub, 'auth')
-      .mockReturnValueOnce(new Promise((resolve) => resolve(null as unknown as string)))
+      .mockReturnValueOnce(
+        new Promise((resolve) => resolve(null as unknown as string))
+      )
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(unauthorized())
   })
