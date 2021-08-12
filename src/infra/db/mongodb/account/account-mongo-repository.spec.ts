@@ -1,5 +1,5 @@
 import { MongoHelper } from '../helpers/mongo-helper'
-import { AccountMongoRepository } from './account-mogo-repository'
+import { AccountMongoRepository } from './account-mongo-repository'
 import * as dotenv from 'dotenv'
 import { Collection } from 'mongodb'
 dotenv.config()
