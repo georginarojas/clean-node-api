@@ -3,7 +3,7 @@ import {
   ok,
   serverError,
   unauthorized
-} from '../../helpers/http/http_helper'
+} from '../../../helpers/http/http_helper'
 import { Validation } from '../signup/signup-controller-protocols'
 import {
   Controller,
