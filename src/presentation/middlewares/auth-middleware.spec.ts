@@ -1,5 +1,5 @@
-import { AccessDeniedError } from '../errors'
-import { forbidden, ok } from '../helpers/http/http_helper'
+import { AccessDeniedError, ServerError } from '../errors'
+import { forbidden, ok, serverError } from '../helpers/http/http_helper'
 import { AuthMiddleware } from './auth-middleware'
 import { LoadAccountByToken } from '../../domain/usecases/load-account-by-token'
 import { AccountModel } from '../../domain/models/account'
@@ -76,5 +76,18 @@ describe('Auht Middleware', () => {
         accountId: 'valid_id'
       })
     )
+  })
+
+  test('should returns 500 if LoadAccountByToken throws', async () => {
+    const { sut, loadAccountByTokenStub } = makeSut()
+    jest
+      .spyOn(loadAccountByTokenStub, 'load')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      )
+    const httpResponse = await sut.handle({
+      headers: { 'x-access-token': 'any_token' }
+    })
+    expect(httpResponse).toEqual(serverError(new ServerError()))
   })
 })
