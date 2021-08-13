@@ -1,5 +1,5 @@
 import { AccessDeniedError } from '../errors'
-import { forbidden } from '../helpers/http/http_helper'
+import { forbidden, ok } from '../helpers/http/http_helper'
 import { AuthMiddleware } from './auth-middleware'
 import { LoadAccountByToken } from '../../domain/usecases/load-account-by-token'
 import { AccountModel } from '../../domain/models/account'
@@ -64,5 +64,17 @@ describe('Auht Middleware', () => {
       headers: { 'x-access-token': 'any_token' }
     })
     expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
+  })
+
+  test('should return 200 if LoadAccountByToken returns an account', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle({
+      headers: { 'x-access-token': 'any_token' }
+    })
+    expect(httpResponse).toEqual(
+      ok({
+        accountId: 'valid_id'
+      })
+    )
   })
 })
