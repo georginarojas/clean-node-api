@@ -3,16 +3,18 @@ import { DbAddSurvey } from './db-add-survey'
 
 const makeFakeSurveyData = (): AddSurveyModel => ({
   question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer'
-  }]
+  answers: [
+    {
+      image: 'any_image',
+      answer: 'any_answer'
+    }
+  ]
 })
 
 const makeAddSurveyRepository = (): AddSurveyRepository => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
     async add (surveyData: AddSurveyModel): Promise<void> {
-      return await new Promise(resolve => resolve())
+      return await new Promise((resolve) => resolve())
     }
   }
   return new AddSurveyRepositoryStub()
@@ -39,5 +41,16 @@ describe('DbAddSurvey Usecase', () => {
     const addSpy = jest.spyOn(addSurveyRepositoryStub, 'add')
     await sut.add(makeFakeSurveyData())
     expect(addSpy).toHaveBeenCalledWith(makeFakeSurveyData())
+  })
+
+  test('should throws if AddSurveyRepository throws', async () => {
+    const { sut, addSurveyRepositoryStub } = makeSut()
+    jest
+      .spyOn(addSurveyRepositoryStub, 'add')
+      .mockReturnValueOnce(
+        new Promise((resolve, reject) => reject(new Error()))
+      )
+    const promise = sut.add(makeFakeSurveyData())
+    await expect(promise).rejects.toThrow()
   })
 })
